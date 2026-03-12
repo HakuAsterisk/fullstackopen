@@ -2,9 +2,11 @@
 //Defining each part of the component separately was frustrating so I added a slightly cleaner execution.
 //I'll probably stick more sternly to the instructions in the future but this was a nice warmup for today.
 
+//Note for 1.3-1.5: Oops, looks like I predicted the future and needed only light refactors to fit spec.
+
 const Header = (props) => (
   <div>
-    <h1>{props.course}</h1>
+    <h1>{props.course.name}</h1>
   </div>
 );
 
@@ -13,7 +15,10 @@ const Total = (props) => {
     <div>
       <p>
         Number of exercises{" "}
-        {props.exercises.reduce((sum, part) => sum + part.exercises, 0)}
+        {props.exercises.courseParts.reduce(
+          (sum, part) => sum + part.exercises,
+          0,
+        )}
       </p>
     </div>
   );
@@ -22,8 +27,8 @@ const Total = (props) => {
 const Content = (props) => {
   return (
     <div>
-      {props.parts.map((part) => (
-        <Part key={part.name} part={part.name} exercises={part.exercises} />
+      {props.parts.courseParts.map((part) => (
+        <Part key={part.name} part={part} />
       ))}
     </div>
   );
@@ -33,25 +38,27 @@ const Part = (props) => {
   return (
     <div>
       <p>
-        {props.part} {props.exercises}
+        {props.part.name} {props.part.exercises}
       </p>
     </div>
   );
 };
 
 const App = () => {
-  const course = "Half Stack application development";
-  const contentParts = [
-    { name: "Fundamentals of React", exercises: 10 },
-    { name: "Using props to pass data", exercises: 7 },
-    { name: "State of a component", exercises: 14 },
-  ];
+  const course = {
+    name: "Half Stack application development",
+    courseParts: [
+      { name: "Fundamentals of React", exercises: 10 },
+      { name: "Using props to pass data", exercises: 7 },
+      { name: "State of a component", exercises: 14 },
+    ],
+  };
 
   return (
     <div>
       <Header course={course} />
-      <Content parts={contentParts} />
-      <Total exercises={contentParts} />
+      <Content parts={course} />
+      <Total exercises={course} />
     </div>
   );
 };
