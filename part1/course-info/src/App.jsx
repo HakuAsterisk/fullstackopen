@@ -1,9 +1,3 @@
-//Time spent so far ~1h
-//Defining each part of the component separately was frustrating so I added a slightly cleaner execution.
-//I'll probably stick more sternly to the instructions in the future but this was a nice warmup for today.
-
-//Note for 1.3-1.5: Oops, looks like I predicted the future and needed only light refactors to fit spec.
-
 const Header = (props) => (
   <div>
     <h1>{props.course.name}</h1>
