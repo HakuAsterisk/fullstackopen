@@ -4,12 +4,6 @@ const PersonForm = ({
   handleNameChange,
   newNumber,
   handleNumberChange,
-}: {
-  handleSubmit: React.SubmitEventHandler<HTMLFormElement>;
-  newName: string;
-  handleNameChange: React.ChangeEventHandler<HTMLInputElement>;
-  newNumber: string;
-  handleNumberChange: React.ChangeEventHandler<HTMLInputElement>;
 }) => {
   return (
     <form onSubmit={handleSubmit}>
