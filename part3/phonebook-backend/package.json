@@ -1,0 +1,25 @@
+{
+  "name": "phonebook-backend",
+  "version": "1.0.0",
+  "description": "backend to our phonebook assignment",
+  "homepage": "https://github.com/HakuAsterisk/fullstackopen#readme",
+  "bugs": {
+    "url": "https://github.com/HakuAsterisk/fullstackopen/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HakuAsterisk/fullstackopen.git"
+  },
+  "license": "MIT",
+  "author": "HakuAsterisk",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
