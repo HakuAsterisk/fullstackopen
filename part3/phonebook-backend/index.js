@@ -1,8 +1,27 @@
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
 let data = require("./data.json");
 
 app.use(express.json());
+
+morgan.token("body", (req) => {
+  return JSON.stringify(req.body);
+});
+app.use(
+  morgan("tiny", {
+    skip: (req, res) =>
+      req.url.startsWith("/.well-known/") || req.method == "POST",
+  }),
+);
+app.use(
+  morgan(
+    ":method :url :status :res[content-length] - :response-time ms :body",
+    {
+      skip: (req, res) => req.method !== "POST",
+    },
+  ),
+);
 
 app.get("/", (req, res) => {
   res.send("<h1>Phonebook!</h1>");
