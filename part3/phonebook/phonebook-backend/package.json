@@ -17,7 +17,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --watch index.js"
+    "dev": "node --watch index.js",
+    "build:ui": "@powershell Remove-Item -Recurse -Force dist && cd ../phonebook-frontend && npm run build && @powershell Copy-Item dist -Recurse ../phonebook-backend"
   },
   "dependencies": {
     "express": "^5.2.1",
