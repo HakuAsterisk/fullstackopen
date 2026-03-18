@@ -1,10 +1,12 @@
 const express = require("express");
 const morgan = require("morgan");
 const app = express();
-let data = require("./data.json");
 
-app.use(express.json());
+require("dotenv").config();
+const Person = require("./models/person");
+
 app.use(express.static("dist"));
+app.use(express.json());
 
 morgan.token("body", (req) => {
   return JSON.stringify(req.body);
@@ -24,75 +26,56 @@ app.use(
   ),
 );
 
-app.get("/", (req, res) => {
-  res.send("<h1>Phonebook!</h1>");
-});
-
 // info
-
 app.get("/info", (req, res) => {
   const date = new Date();
-  res.send(`
-    <p>Phonebook has info for ${data.length} people</p>
+  Person.find({}).then((data) => {
+    res.send(`
+    <p>Phonebook has info about ${data.length} people</p>
     <p>${date}</p>
     `);
+  });
 });
 
 // get
-
 app.get("/api/persons", (req, res) => {
-  res.json(data);
+  Person.find({}).then((people) => {
+    res.json(people);
+  });
 });
 
 app.get("/api/persons/:id", (req, res) => {
   const id = req.params.id;
-  const person = data.find((person) => person.id === id);
-
-  if (person) {
-    res.json(person);
-  } else {
-    res.statusMessage = "Person not found";
-    res.status(404).end();
-  }
+  Person.findById(id).then((person) => res.json(person));
 });
 
 // post
-
 app.post("/api/persons", (req, res) => {
   const body = req.body;
-  const max = 1000000;
-
   if (!body.name || !body.number) {
     return res.status(400).json({
       error: "Required information missing.",
     });
   }
 
-  if (data.find((person) => person.name === body.name)) {
-    return res.status(400).json({
-      error: "Name must be unique.",
-    });
-  }
-
-  const person = {
-    id: Math.floor(Math.random() * max).toString(),
+  const person = new Person({
     name: body.name,
     number: body.number,
-  };
+  });
 
-  data = data.concat(person);
-  res.json(person);
+  person.save().then((person) => {
+    res.json(person);
+  });
 });
 
 // delete
-
 app.delete("/api/persons/:id", (req, res) => {
   const id = req.params.id;
   data = data.filter((person) => person.id !== id);
   res.status(204).end();
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
