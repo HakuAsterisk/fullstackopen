@@ -17,7 +17,7 @@ const PersonForm = ({
         <br />
         Number:{" "}
         <input
-          placeholder="e.g. 040 1234567"
+          placeholder="e.g. 040-1234567"
           value={newNumber}
           onChange={handleNumberChange}
           type="tel"

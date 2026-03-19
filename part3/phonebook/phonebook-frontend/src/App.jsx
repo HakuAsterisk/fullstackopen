@@ -69,10 +69,7 @@ const App = () => {
         })
         .catch((error) => {
           setPersons(persons.filter((p) => p.id !== id));
-          notifRunner(
-            `Delete: Couldn't find ${person.name} from server.`,
-            false,
-          );
+          notifRunner(error.response.data.error, false);
         });
     }
   };
@@ -88,8 +85,7 @@ const App = () => {
           notifRunner(`Updated ${person.name}`, true);
         })
         .catch((error) => {
-          setPersons(persons.filter((p) => p.id !== id));
-          notifRunner(`Update: Couldn't find ${newName} from server.`, false);
+          notifRunner(error.response.data.error, false);
         });
     }
   };
@@ -102,7 +98,7 @@ const App = () => {
         notifRunner(`Added ${reply.name}`, true);
       })
       .catch((error) => {
-        notifRunner(`Couldn't create ${newName}`, false);
+        notifRunner(error.response.data.error, false);
       });
   };
 
