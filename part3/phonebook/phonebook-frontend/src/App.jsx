@@ -65,7 +65,7 @@ const App = () => {
         .deletePerson(id)
         .then((reply) => {
           setPersons(persons.filter((p) => p.id !== id));
-          notifRunner(`Deleted ${reply.name}`, true);
+          notifRunner(`Deleted ${person.name}`, true);
         })
         .catch((error) => {
           setPersons(persons.filter((p) => p.id !== id));
@@ -85,7 +85,7 @@ const App = () => {
         .updatePerson(id, updatedPerson)
         .then((reply) => {
           setPersons(persons.map((p) => (p.id === id ? reply : p)));
-          notifRunner(`Updated ${reply.name}`, true);
+          notifRunner(`Updated ${person.name}`, true);
         })
         .catch((error) => {
           setPersons(persons.filter((p) => p.id !== id));
