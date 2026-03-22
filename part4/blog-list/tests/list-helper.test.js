@@ -5,7 +5,7 @@ const {
   listWithNoBlogs,
   listWithOneBlog,
   listWithManyBlogs,
-} = require('./blog-lists')
+} = require('./blog-test-helper')
 
 describe('Dummy', () => {
   test('returns one', () => {
