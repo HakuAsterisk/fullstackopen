@@ -27,7 +27,12 @@ blogsRouter.post('/', identifyUser, async (req, res) => {
   const savedBlog = await blog.save()
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
-  res.status(201).json(savedBlog)
+  res.status(201).json(
+    await savedBlog.populate('user', {
+      username: 1,
+      _id: 1,
+    }),
+  )
 })
 
 blogsRouter.delete('/:id', identifyUser, async (req, res) => {
@@ -51,13 +56,17 @@ blogsRouter.put('/:id', async (req, res) => {
   if (!targetBlog) {
     return res.status(404).json({ error: 'Blog not found' })
   }
-
   targetBlog.title = body.title
   targetBlog.author = body.author
   targetBlog.url = body.url
   targetBlog.likes = body.likes
   const updatedBlog = await targetBlog.save()
-  res.json(updatedBlog)
+  res.json(
+    await updatedBlog.populate('user', {
+      username: 1,
+      _id: 1,
+    }),
+  )
 })
 
 module.exports = blogsRouter
