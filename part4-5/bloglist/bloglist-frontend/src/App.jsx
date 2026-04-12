@@ -82,7 +82,7 @@ const App = () => {
     try {
       await blogService.deleteBlog(id)
       setBlogs(blogs.filter((b) => b.id !== id))
-      handleNotif(`Blog deleted!`, true)
+      handleNotif('Blog deleted!', true)
     } catch (error) {
       handleNotif(`Deleting the blog failed! (${error.status})`, false)
     }
