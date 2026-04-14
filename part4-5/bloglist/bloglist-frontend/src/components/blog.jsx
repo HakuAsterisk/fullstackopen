@@ -3,6 +3,8 @@ import { useState } from 'react'
 const Blog = ({ blog, user, handleLike, handleDelete }) => {
   const [showDetails, setShowDetails] = useState(false)
 
+  const show = { display: showDetails ? '' : 'none' }
+
   const myBlog = blog.user[0].id === user.id
 
   const deleteBlog = () => {
@@ -45,19 +47,15 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
             {showDetails ? 'Hide' : 'View'}
           </button>
         </div>
-        {showDetails && (
-          <div>
-            {blog.author}
-            <br />
+        {blog.author}
+        <div style={show}>
+          <p style={{ padding: 0, margin: 0 }}>
             {blog.likes} <button onClick={likeBlog}>Like</button>
-            <br />
-            {blog.url}
-            <br />
-            {blog.user[0].username}
-            <br />
-            {myBlog && <button onClick={deleteBlog}>Delete Blog</button>}
-          </div>
-        )}
+          </p>
+          <p style={{ padding: 0, margin: 0 }}>{blog.url}</p>
+          <p style={{ padding: 0, margin: 0 }}>{blog.user[0].username}</p>
+          {myBlog && <button onClick={deleteBlog}>Delete Blog</button>}
+        </div>
       </div>
     </>
   )

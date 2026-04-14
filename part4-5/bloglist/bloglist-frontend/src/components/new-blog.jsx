@@ -28,6 +28,7 @@ const NewBlog = ({ handleNewBlog }) => {
               style={{ margin: 8 }}
               type='text'
               value={title}
+              placeholder='Blog title'
               onChange={(event) => setTitle(event.target.value)}
             />
           </label>
@@ -39,6 +40,7 @@ const NewBlog = ({ handleNewBlog }) => {
               style={{ marginLeft: 8, marginBottom: 8 }}
               type='text'
               value={author}
+              placeholder='Blog author'
               onChange={(event) => setAuthor(event.target.value)}
             />
           </label>
@@ -50,6 +52,7 @@ const NewBlog = ({ handleNewBlog }) => {
               style={{ marginLeft: 8 }}
               type='text'
               value={url}
+              placeholder='Blog url'
               onChange={(event) => setUrl(event.target.value)}
             />
           </label>

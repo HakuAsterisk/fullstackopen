@@ -38,5 +38,17 @@ export default [
       'arrow-spacing': ['error', { before: true, after: true }],
       'no-console': 'off',
     },
+    files: ['**/*.test.{js,jsx}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: {
+        ...globals.vitest,
+      },
+      parserOptions: {
+        ecmaVersion: 'latest',
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module',
+      },
+    },
   },
 ]
