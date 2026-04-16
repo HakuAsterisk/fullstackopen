@@ -91,8 +91,11 @@ const App = () => {
   return (
     <>
       {message && <Notification message={message} type={messageType} />}
+      <>
+        <h1>Blogs</h1>
+      </>
       {!user && (
-        <Toggle closedLabel='log in' openLabel='cancel'>
+        <Toggle closedLabel='Login' openLabel='Cancel'>
           <LoginForm handleLogin={handleLogin} />
         </Toggle>
       )}
@@ -105,7 +108,7 @@ const App = () => {
                 handleLogout()
               }}
             >
-              logout
+              Logout
             </button>
           </div>
           <BlogList

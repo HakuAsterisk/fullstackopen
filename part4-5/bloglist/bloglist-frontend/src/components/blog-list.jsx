@@ -3,8 +3,7 @@ import Blog from './blog'
 const BlogList = ({ blogs, user, handleLike, handleDelete }) => {
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
   return (
-    <div style={{ marginBottom: 8 }}>
-      <h2>blogs</h2>
+    <div className='blogList' style={{ marginBottom: 8, marginTop: 8 }}>
       {sortedBlogs.map((blog) => (
         <Blog
           key={blog.id}

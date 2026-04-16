@@ -39,7 +39,7 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
             display: 'flex',
           }}
         >
-          {blog.title}
+          <p style={{ padding: 0, margin: 0 }}>{blog.title}</p>
           <button
             style={{ marginLeft: 8 }}
             onClick={() => setShowDetails(!showDetails)}
