@@ -1,20 +1,15 @@
-import Blog from './blog'
+import { Link } from 'react-router-dom'
 
-const BlogList = ({ blogs, user, handleLike, handleDelete }) => {
-  const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
+const BlogList = ({ blogs }) => {
   return (
-    <div className='blogList' style={{ marginBottom: 8, marginTop: 8 }}>
-      {sortedBlogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          user={user}
-          handleLike={handleLike}
-          handleDelete={handleDelete}
-        />
+    <ul>
+      {blogs.map((blog) => (
+        <li key={blog.id}>
+          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+        </li>
       ))}
-    </div>
+    </ul>
   )
 }
 
-export { BlogList as default }
+export default BlogList

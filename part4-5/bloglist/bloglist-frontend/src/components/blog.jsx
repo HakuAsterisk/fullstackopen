@@ -1,19 +1,13 @@
-import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const Blog = ({ blog, user, handleLike, handleDelete }) => {
-  const [showDetails, setShowDetails] = useState(false)
+const Blog = ({ blog, user, handleNotif, handleDelete, handleLike }) => {
+  const navigate = useNavigate()
 
-  const show = { display: showDetails ? '' : 'none' }
-
-  const myBlog = blog.user[0].id === user.id
-
-  const deleteBlog = () => {
-    if (window.confirm(`Delete ${blog.title} by ${blog.author}?`)) {
-      handleDelete(blog.id)
-    } else {
-      return
-    }
+  if (!blog) {
+    return null
   }
+
+  const canDelete = user && blog.user[0].id === user.id
 
   const likeBlog = () => {
     handleLike({
@@ -25,6 +19,20 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
     })
   }
 
+  const deleteBlog = async () => {
+    if (window.confirm(`Delete ${blog.title} by ${blog.author}?`)) {
+      await handleDelete(blog.id)
+      navigate('/')
+    } else {
+      return
+    }
+  }
+
+  const paragraph = {
+    padding: 0,
+    margin: 0,
+  }
+
   return (
     <>
       <div
@@ -34,31 +42,26 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
           marginBottom: 8,
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-          }}
-        >
-          <p style={{ padding: 0, margin: 0 }}>{blog.title}</p>
-          <button
-            style={{ marginLeft: 8 }}
-            onClick={() => setShowDetails(!showDetails)}
-          >
-            {showDetails ? 'Hide' : 'View'}
-          </button>
-        </div>
-        {blog.author}
-        <div style={show}>
-          <p style={{ padding: 0, margin: 0 }}>
-            {blog.likes} <button onClick={likeBlog}>Like</button>
+        <h2 style={paragraph}>
+          {blog.author}: {blog.title}
+        </h2>
+        <div>
+          <p style={paragraph}>
+            {blog.likes}{' '}
+            {!user ? (
+              <span>Likes</span>
+            ) : (
+              <button onClick={likeBlog}>Like</button>
+            )}
           </p>
-          <p style={{ padding: 0, margin: 0 }}>{blog.url}</p>
-          <p style={{ padding: 0, margin: 0 }}>{blog.user[0].username}</p>
-          {myBlog && <button onClick={deleteBlog}>Delete Blog</button>}
+          <a href={blog.url} target='_blank' style={paragraph}>
+            {blog.url}
+          </a>
+          <p style={paragraph}>Added by: {blog.user[0].username}</p>
+          {canDelete && <button onClick={deleteBlog}>Delete</button>}
         </div>
       </div>
     </>
   )
 }
-
 export default Blog

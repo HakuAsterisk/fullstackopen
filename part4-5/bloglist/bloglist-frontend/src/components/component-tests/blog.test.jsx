@@ -1,6 +1,16 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Blog from '../blog'
+import { test } from 'vitest'
+
+const mockUsedNavigate = vi.fn()
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom')
+  return {
+    ...actual,
+    useNavigate: () => mockUsedNavigate,
+  }
+})
 
 const blog = {
   user: [{ id: '123' }],
@@ -9,58 +19,56 @@ const blog = {
   url: 'testurl',
   likes: 7,
 }
-const user = [
-  {
-    id: '123',
-  },
-]
+const userOne = {
+  id: '123',
+  username: 'testuser',
+  name: 'Test',
+}
+const userTwo = {
+  id: '456',
+  username: 'otheruser',
+  name: 'Other',
+}
 
 describe('<Blog />', () => {
-  beforeEach(() => {
-    render(<Blog blog={blog} user={user} />)
-  })
-
-  test('Only title and author visible on render', () => {
-    const title = screen.getByText('Test title')
-    expect(title).toBeDefined().toBeVisible()
-    const author = screen.getByText('Test author')
-    expect(author).toBeDefined().toBeVisible()
-
-    const url = screen.getByText('testurl')
-    expect(url).not.toBeVisible()
-    const likes = screen.getByText('7')
-    expect(likes).not.toBeVisible()
-  })
-
-  test('Everything visible when button is clicked', async () => {
-    const event = userEvent.setup()
-    const button = screen.getByText('View')
-    await event.click(button)
-
-    const title = screen.getByText('Test title')
-    expect(title).toBeDefined().toBeVisible()
-    const author = screen.getByText('Test author')
-    expect(author).toBeDefined().toBeVisible()
-
+  test('Blog information displayed on render', () => {
+    render(<Blog blog={blog} user={null} />)
+    const header = screen.getByText('Test author: Test title')
+    expect(header).toBeDefined().toBeVisible()
     const url = screen.getByText('testurl')
     expect(url).toBeVisible()
     const likes = screen.getByText('7')
     expect(likes).toBeVisible()
   })
+  test('Like and delete buttons hidden by default', () => {
+    const likeButton = screen.queryByText('Like')
+    expect(likeButton).toBeNull()
+    const deleteButton = screen.queryByText('Delete')
+    expect(deleteButton).toBeNull()
+  })
 })
 
-describe('Likes', () => {
-  test('Like button handles calls properly', async () => {
+describe('When logged in but not blogs creator', () => {
+  test('Like button visible and handles calls properly', async () => {
     const handler = vi.fn()
-    render(<Blog blog={blog} user={user} handleLike={handler} />)
+    render(<Blog blog={blog} user={userTwo} handleLike={handler} />)
     const event = userEvent.setup()
-    const button = screen.getByText('View')
-    await event.click(button)
-
     const likeButton = screen.getByText('Like')
     await event.click(likeButton)
     await event.click(likeButton)
-
     expect(handler.mock.calls).toHaveLength(2)
+  })
+  test('Delete button hidden', () => {
+    render(<Blog blog={blog} user={userTwo} />)
+    const deleteButton = screen.queryByText('Delete')
+    expect(deleteButton).toBeNull()
+  })
+})
+
+describe('When logged in as blogs creator', () => {
+  test('Delete button visible', () => {
+    render(<Blog blog={blog} user={userOne} />)
+    const deleteButton = screen.getByText('Delete')
+    expect(deleteButton).toBeVisible()
   })
 })

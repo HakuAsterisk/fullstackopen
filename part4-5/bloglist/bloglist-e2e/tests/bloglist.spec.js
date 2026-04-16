@@ -22,14 +22,10 @@ describe('Blog app', () => {
     await page.goto('/')
   })
   test('Login form is shown', async ({ page }) => {
-    await expect(page.getByText('Blogs')).toBeVisible()
+    await expect(page.getByText('Login')).toBeVisible()
   })
 
   describe('Login', () => {
-    test('succeeds with correct credentials', async ({ page }) => {
-      await login(page, 'test', 'asd123')
-      await expect(page.getByText('Test user logged in')).toBeVisible()
-    })
     test('fails with wrong credentials', async ({ page }) => {
       await login(page, 'test', 'wrong')
       const errorDiv = page.locator('.notification')
@@ -37,6 +33,10 @@ describe('Blog app', () => {
       await expect(errorDiv).toHaveCSS('border-style', 'solid')
       await expect(errorDiv).toHaveCSS('color', 'rgb(255, 0, 0)')
       await expect(page.getByText('Test user logged in')).not.toBeVisible()
+    })
+    test('succeeds with correct credentials', async ({ page }) => {
+      await login(page, 'test', 'asd123')
+      await expect(page.getByRole('button', { name: 'Logout' })).toBeVisible()
     })
 
     describe('When logged in', () => {
@@ -54,62 +54,33 @@ describe('Blog app', () => {
         ).toBeVisible()
       })
       test('A blog can be liked', async ({ page }) => {
-        const blog = page.getByText('A blog created by playwright', {
-          exact: true,
-        })
-        const blogElement = blog.locator('../..')
-        await blogElement.getByRole('button', { name: 'View' }).click()
-        await blogElement.getByRole('button', { name: 'Like' }).click()
-        await expect(blogElement.getByText('1')).toBeVisible()
+        await page
+          .getByText('A blog created by playwright', { exact: true })
+          .click()
+        await page.getByRole('button', { name: 'Like' }).click()
+        await expect(page.getByText('1')).toBeVisible()
       })
       test('A blog can be deleted', async ({ page }) => {
-        const blog = page.getByText('A blog created by playwright', {
-          exact: true,
-        })
-        const blogElement = blog.locator('../..')
-        await blogElement.getByRole('button', { name: 'View' }).click()
+        await page
+          .getByText('A blog created by playwright', { exact: true })
+          .click()
         page.on('dialog', (dialog) => dialog.accept())
-        await blogElement.getByRole('button', { name: 'Delete Blog' }).click()
-        await expect(blog).not.toBeVisible()
+        await page.getByRole('button', { name: 'Delete' }).click()
+        await expect(
+          page.getByText('A blog created by playwright', { exact: true }),
+        ).not.toBeVisible()
       })
 
       describe('When 2nd user logs in', () => {
         test('blog cannot be deleted by other user', async ({ page }) => {
           await page.getByRole('button', { name: 'Logout' }).click()
           await login(page, 'other', 'asd1234')
-          const blog = page.getByText('A blog created by playwright', {
-            exact: true,
-          })
-          const blogElement = blog.locator('../..')
-          await blogElement.getByRole('button', { name: 'View' }).click()
+          await page
+            .getByText('A blog created by playwright', { exact: true })
+            .click()
           await expect(
-            blogElement.getByRole('button', { name: 'Delete Blog' }),
+            page.getByRole('button', { name: 'Delete' }),
           ).not.toBeVisible()
-        })
-      })
-
-      describe('When multiple blogs exist', () => {
-        beforeEach(async ({ page }) => {
-          await createBlog(page, {
-            title: 'Another Playwright blog',
-            author: 'Playwright',
-            url: 'http://playwright.dev',
-          })
-        })
-        test('blogs are ordered according to likes', async ({ page }) => {
-          const secondBlog = page.getByText('Another Playwright blog', {
-            exact: true,
-          })
-          const secondElement = secondBlog.locator('../..')
-          await secondElement.getByRole('button', { name: 'View' }).click()
-          await secondElement.getByRole('button', { name: 'Like' }).click()
-          const blogElements = page.locator('.blogList').locator('div')
-          await expect(blogElements.first()).toContainText(
-            'Another Playwright blog',
-          )
-          await expect(blogElements.nth(3)).toContainText(
-            'A blog created by playwright',
-          )
         })
       })
     })

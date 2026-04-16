@@ -1,40 +1,46 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm = ({ handleLogin }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const navigate = useNavigate()
 
-  const logIn = (event) => {
+  const logIn = async (event) => {
     event.preventDefault()
-    handleLogin({ username, password })
+    await handleLogin({ username, password })
     setUsername('')
     setPassword('')
+    navigate('/')
+  }
+
+  const inputMargin = {
+    marginBottom: 8,
+    marginLeft: 8,
   }
 
   return (
-    <form onSubmit={logIn}>
-      <div>
-        <label>
-          Username
-          <input
-            style={{ margin: 8 }}
-            type='text'
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
-          />
-        </label>
-      </div>
-      <div style={{ marginBottom: 8 }}>
-        <label>
-          Password
-          <input
-            style={{ marginLeft: 8 }}
-            type='password'
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </label>
-      </div>
+    <form onSubmit={logIn} style={{ marginTop: 8 }}>
+      <label>
+        Username
+        <input
+          style={inputMargin}
+          type='text'
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
+        />
+      </label>
+      <br />
+      <label>
+        Password
+        <input
+          style={inputMargin}
+          type='password'
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+        />
+      </label>
+      <br />
       <button type='submit'>login</button>
     </form>
   )

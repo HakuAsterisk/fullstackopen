@@ -1,20 +1,20 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
+import { Routes, Route, Link, useMatch } from 'react-router-dom'
+
 import blogService from './services/blogs'
-import LoginForm from './components/login-form'
 import loginService from './services/login'
+
+import LoginForm from './components/login-form'
 import Notification from './components/notification'
 import NewBlog from './components/new-blog'
-import Toggle from './components/toggle'
 import BlogList from './components/blog-list'
+import Blog from './components/blog'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-
   const [message, setMessage] = useState(null)
   const [messageType, setMessageType] = useState(true)
-
-  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -28,6 +28,8 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
 
   const handleLogin = async (loginData) => {
     try {
@@ -49,15 +51,33 @@ const App = () => {
 
   const handleNewBlog = async (newBlog) => {
     try {
-      blogFormRef.current.toggleVisibility()
       const returnedBlog = await blogService.createBlog(newBlog)
-      setBlogs(blogs.concat(returnedBlog))
       handleNotif(
         `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`,
         true,
       )
+      setBlogs(blogs.concat(returnedBlog))
     } catch (error) {
       handleNotif(`Creating a new blog failed! (${error.status})`, false)
+    }
+  }
+
+  const handleDelete = async (id) => {
+    try {
+      await blogService.deleteBlog(id)
+      handleNotif('Blog deleted!', true)
+      setBlogs(blogs.filter((b) => b.id !== id))
+    } catch (error) {
+      handleNotif(`Deleting the blog failed! (${error.status})`, false)
+    }
+  }
+
+  const handleLike = async (blog) => {
+    try {
+      const updatedBlog = await blogService.updateBlog(blog)
+      setBlogs(blogs.map((b) => (b.id !== blog.id ? b : updatedBlog)))
+    } catch (error) {
+      handleNotif(`Liking the blog failed! (${error.status})`, false)
     }
   }
 
@@ -69,62 +89,70 @@ const App = () => {
     }, 5000)
   }
 
-  const handleLike = async (blog) => {
-    try {
-      const updatedBlog = await blogService.updateBlog(blog)
-      setBlogs(blogs.map((b) => (b.id === updatedBlog.id ? updatedBlog : b)))
-    } catch (error) {
-      handleNotif(`Liking the blog failed! (${error.status})`, false)
-    }
+  const padding = {
+    padding: 5,
   }
-
-  const handleDelete = async (id) => {
-    try {
-      await blogService.deleteBlog(id)
-      setBlogs(blogs.filter((b) => b.id !== id))
-      handleNotif('Blog deleted!', true)
-    } catch (error) {
-      handleNotif(`Deleting the blog failed! (${error.status})`, false)
-    }
-  }
+  const match = useMatch('/blogs/:id')
+  const blog = match
+    ? sortedBlogs.find((blog) => blog.id === match.params.id)
+    : null
 
   return (
-    <>
-      {message && <Notification message={message} type={messageType} />}
-      <>
-        <h1>Blogs</h1>
-      </>
-      {!user && (
-        <Toggle closedLabel='Login' openLabel='Cancel'>
-          <LoginForm handleLogin={handleLogin} />
-        </Toggle>
-      )}
-      {user && (
-        <div>
-          <div>
-            <p>{user.name} logged in</p>
-            <button
-              onClick={() => {
-                handleLogout()
-              }}
-            >
-              Logout
-            </button>
-          </div>
-          <BlogList
-            blogs={blogs}
-            user={user}
-            handleLike={handleLike}
-            handleDelete={handleDelete}
-          />
-          <div>
-            <Toggle closedLabel='New blog' openLabel='Cancel' ref={blogFormRef}>
-              <NewBlog handleNewBlog={handleNewBlog} />
-            </Toggle>
-          </div>
-        </div>
-      )}
-    </>
+    <div>
+      <div>
+        <Link style={padding} to='/'>
+          Blogs
+        </Link>
+        {!user ? (
+          <Link style={padding} to='/login'>
+            Login
+          </Link>
+        ) : (
+          <>
+            <Link style={padding} to='/create'>
+              New Blog
+            </Link>
+            <button onClick={handleLogout}>Logout</button>
+          </>
+        )}
+      </div>
+
+      <Notification message={message} type={messageType} />
+
+      <Routes>
+        <Route
+          path='/'
+          element={
+            <div>
+              <h2>Blogs!</h2>
+              <BlogList blogs={sortedBlogs} />
+            </div>
+          }
+        />
+        <Route
+          path='/login'
+          element={<LoginForm handleLogin={handleLogin} />}
+        />
+        <Route
+          path='/blogs/:id'
+          element={
+            <Blog
+              blog={blog}
+              user={user}
+              handleNotif={handleNotif}
+              handleDelete={handleDelete}
+              handleLike={handleLike}
+            />
+          }
+        />
+        <Route
+          path='/create'
+          element={
+            <NewBlog handleNotif={handleNotif} handleNewBlog={handleNewBlog} />
+          }
+        />
+      </Routes>
+    </div>
   )
 }
 

@@ -1,13 +1,15 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const NewBlog = ({ handleNewBlog }) => {
+const NewBlog = ({ handleNotif, handleNewBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const navigate = useNavigate()
 
-  const addBlog = (event) => {
+  const addBlog = async (event) => {
     event.preventDefault()
-    handleNewBlog({
+    await handleNewBlog({
       title,
       author,
       url,
@@ -15,48 +17,51 @@ const NewBlog = ({ handleNewBlog }) => {
     setTitle('')
     setAuthor('')
     setUrl('')
+    navigate('/')
+  }
+
+  const inputMargin = {
+    marginLeft: 8,
+    marginBottom: 8,
   }
 
   return (
     <>
       <h2>Create a new blog</h2>
-      <form style={{ marginBottom: 8 }} onSubmit={addBlog}>
-        <div>
-          <label>
-            Title
-            <input
-              style={{ margin: 8 }}
-              type='text'
-              value={title}
-              placeholder='Blog title'
-              onChange={(event) => setTitle(event.target.value)}
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            Author
-            <input
-              style={{ marginLeft: 8, marginBottom: 8 }}
-              type='text'
-              value={author}
-              placeholder='Blog author'
-              onChange={(event) => setAuthor(event.target.value)}
-            />
-          </label>
-        </div>
-        <div style={{ marginBottom: 8 }}>
-          <label>
-            Url
-            <input
-              style={{ marginLeft: 8 }}
-              type='text'
-              value={url}
-              placeholder='Blog url'
-              onChange={(event) => setUrl(event.target.value)}
-            />
-          </label>
-        </div>
+      <form onSubmit={addBlog}>
+        <label>
+          Title
+          <input
+            style={inputMargin}
+            type='text'
+            value={title}
+            placeholder='Blog title'
+            onChange={(event) => setTitle(event.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Author
+          <input
+            style={inputMargin}
+            type='text'
+            value={author}
+            placeholder='Blog author'
+            onChange={(event) => setAuthor(event.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Url
+          <input
+            style={inputMargin}
+            type='text'
+            value={url}
+            placeholder='Blog url'
+            onChange={(event) => setUrl(event.target.value)}
+          />
+        </label>
+        <br />
         <button type='submit'>Create</button>
       </form>
     </>
