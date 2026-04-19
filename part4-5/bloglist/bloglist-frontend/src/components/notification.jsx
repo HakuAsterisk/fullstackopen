@@ -1,16 +1,21 @@
+import { Alert, Box } from '@mui/material'
+
 const Notification = ({ message, type }) => {
   if (message === null) {
     return null
   }
 
-  return type ? (
-    <div className='notification' style={{ color: 'green' }}>
-      {message}
-    </div>
-  ) : (
-    <div className='notification' style={{ color: 'red' }}>
-      {message}
-    </div>
+  return (
+    <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+      <Alert
+        severity={type ? 'success' : 'error'}
+        variant='filled'
+        sx={{ width: '100%', maxWidth: 600 }}
+        className='notification'
+      >
+        {message}
+      </Alert>
+    </Box>
   )
 }
 

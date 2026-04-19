@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route, Link, useMatch } from 'react-router-dom'
+import { AppBar, Toolbar, Button, Container, Box } from '@mui/material'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -96,63 +97,86 @@ const App = () => {
   const blog = match
     ? sortedBlogs.find((blog) => blog.id === match.params.id)
     : null
+  const navButtonSx = {
+    bgcolor: 'primary.dark',
+    '&:hover': { bgcolor: 'primary.800' },
+  }
 
   return (
-    <div>
-      <div>
-        <Link style={padding} to='/'>
-          Blogs
-        </Link>
-        {!user ? (
-          <Link style={padding} to='/login'>
-            Login
-          </Link>
-        ) : (
-          <>
-            <Link style={padding} to='/create'>
-              New Blog
-            </Link>
-            <button onClick={handleLogout}>Logout</button>
-          </>
-        )}
-      </div>
+    <>
+      <AppBar position='static' elevation={2}>
+        <Toolbar>
+          <Box sx={{ flexGrow: 1, display: 'flex', gap: 1 }}>
+            <Button color='inherit' component={Link} to='/' sx={navButtonSx}>
+              Blogs
+            </Button>
+            {user && (
+              <Button
+                color='inherit'
+                component={Link}
+                to='/create'
+                sx={navButtonSx}
+              >
+                New Blog
+              </Button>
+            )}
+          </Box>
+          {!user ? (
+            <Button
+              color='inherit'
+              component={Link}
+              to='/login'
+              sx={navButtonSx}
+            >
+              Login
+            </Button>
+          ) : (
+            <Button color='inherit' onClick={handleLogout} sx={navButtonSx}>
+              Logout
+            </Button>
+          )}
+        </Toolbar>
+      </AppBar>
 
-      <Notification message={message} type={messageType} />
-
-      <Routes>
-        <Route
-          path='/'
-          element={
-            <div>
-              <h2>Blogs!</h2>
-              <BlogList blogs={sortedBlogs} />
-            </div>
-          }
-        />
-        <Route
-          path='/login'
-          element={<LoginForm handleLogin={handleLogin} />}
-        />
-        <Route
-          path='/blogs/:id'
-          element={
-            <Blog
-              blog={blog}
-              user={user}
-              handleNotif={handleNotif}
-              handleDelete={handleDelete}
-              handleLike={handleLike}
-            />
-          }
-        />
-        <Route
-          path='/create'
-          element={
-            <NewBlog handleNotif={handleNotif} handleNewBlog={handleNewBlog} />
-          }
-        />
-      </Routes>
-    </div>
+      <Container>
+        <Notification message={message} type={messageType} />
+        <Routes>
+          <Route
+            path='/'
+            element={
+              <div>
+                <BlogList blogs={sortedBlogs} />
+              </div>
+            }
+          />
+          <Route
+            path='/login'
+            element={<LoginForm handleLogin={handleLogin} />}
+          />
+          <Route
+            path='/blogs/:id'
+            element={
+              <Blog
+                blog={blog}
+                user={user}
+                handleNotif={handleNotif}
+                handleDelete={handleDelete}
+                handleLike={handleLike}
+              />
+            }
+          />
+          <Route
+            path='/create'
+            element={
+              <NewBlog
+                handleNotif={handleNotif}
+                handleNewBlog={handleNewBlog}
+              />
+            }
+          />
+        </Routes>
+      </Container>
+    </>
   )
 }
 

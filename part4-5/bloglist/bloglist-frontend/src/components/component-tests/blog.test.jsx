@@ -33,8 +33,10 @@ const userTwo = {
 describe('<Blog />', () => {
   test('Blog information displayed on render', () => {
     render(<Blog blog={blog} user={null} />)
-    const header = screen.getByText('Test author: Test title')
+    const header = screen.getByText('Test title')
     expect(header).toBeDefined().toBeVisible()
+    const author = screen.getByText('by Test author')
+    expect(author).toBeVisible()
     const url = screen.getByText('testurl')
     expect(url).toBeVisible()
     const likes = screen.getByText('7')

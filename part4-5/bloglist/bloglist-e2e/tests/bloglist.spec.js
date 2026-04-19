@@ -30,8 +30,6 @@ describe('Blog app', () => {
       await login(page, 'test', 'wrong')
       const errorDiv = page.locator('.notification')
       await expect(errorDiv).toContainText('Wrong username or password')
-      await expect(errorDiv).toHaveCSS('border-style', 'solid')
-      await expect(errorDiv).toHaveCSS('color', 'rgb(255, 0, 0)')
       await expect(page.getByText('Test user logged in')).not.toBeVisible()
     })
     test('succeeds with correct credentials', async ({ page }) => {
