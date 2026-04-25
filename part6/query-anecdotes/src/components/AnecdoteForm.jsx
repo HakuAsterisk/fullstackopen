@@ -1,4 +1,4 @@
-import { useAnecdotes } from './hooks/useAnecdotes'
+import { useAnecdotes } from '../hooks/useAnecdotes'
 
 const AnecdoteForm = () => {
   const { addAnecdote } = useAnecdotes()
@@ -9,14 +9,8 @@ const AnecdoteForm = () => {
       content: event.target.anecdote.value,
       votes: 0,
     }
-    if (content.content.length < 5) {
-      alert('Anecdote must be at least 5 characters long')
-      event.target.reset()
-      return
-    } else {
-      event.target.reset()
-      addAnecdote(content)
-    }
+    event.target.reset()
+    addAnecdote(content)
   }
 
   return (
