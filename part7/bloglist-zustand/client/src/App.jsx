@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Routes, Route, Link, useMatch } from "react-router-dom";
 import { AppBar, Toolbar, Button, Container, Box } from "@mui/material";
 import { ErrorBoundary } from "react-error-boundary";
+import { useNotificationActions } from "./stores/notification-store";
 
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -15,8 +16,7 @@ import Blog from "./components/blog";
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [message, setMessage] = useState(null);
-  const [messageType, setMessageType] = useState(true);
+  const { setNotification } = useNotificationActions();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -39,38 +39,37 @@ const App = () => {
       window.localStorage.setItem("appUser", JSON.stringify(user));
       blogService.setToken(user.token);
       setUser(user);
-      handleNotif("Login succesful!", true);
+      setNotification("Login successful!");
     } catch {
-      handleNotif("Wrong username or password", false);
+      setNotification("Wrong username or password");
     }
   };
 
   const handleLogout = () => {
     window.localStorage.removeItem("appUser");
     setUser(null);
-    handleNotif("Logout succesful!", true);
+    setNotification("Logout succesful!");
   };
 
   const handleNewBlog = async (newBlog) => {
     try {
       const returnedBlog = await blogService.createBlog(newBlog);
-      handleNotif(
+      setNotification(
         `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`,
-        true,
       );
       setBlogs(blogs.concat(returnedBlog));
     } catch (error) {
-      handleNotif(`Creating a new blog failed! (${error.status})`, false);
+      setNotification(`Creating a new blog failed! (${error.status})`);
     }
   };
 
   const handleDelete = async (id) => {
     try {
       await blogService.deleteBlog(id);
-      handleNotif("Blog deleted!", true);
+      setNotification("Blog deleted!");
       setBlogs(blogs.filter((b) => b.id !== id));
     } catch (error) {
-      handleNotif(`Deleting the blog failed! (${error.status})`, false);
+      setNotification(`Deleting the blog failed! (${error.status})`);
     }
   };
 
@@ -78,17 +77,10 @@ const App = () => {
     try {
       const updatedBlog = await blogService.updateBlog(blog);
       setBlogs(blogs.map((b) => (b.id !== blog.id ? b : updatedBlog)));
+      setNotification(`${blog.title} liked!`);
     } catch (error) {
-      handleNotif(`Liking the blog failed! (${error.status})`, false);
+      setNotification(`Liking the blog failed! (${error.status})`);
     }
-  };
-
-  const handleNotif = (message, type) => {
-    setMessage(message);
-    setMessageType(type);
-    setTimeout(() => {
-      setMessage(null);
-    }, 5000);
   };
 
   const padding = {
@@ -140,7 +132,7 @@ const App = () => {
       </AppBar>
 
       <Container>
-        <Notification message={message} type={messageType} />
+        <Notification />
         <ErrorBoundary
           fallback={
             <>
@@ -168,7 +160,6 @@ const App = () => {
                 <Blog
                   blog={blog}
                   user={user}
-                  handleNotif={handleNotif}
                   handleDelete={handleDelete}
                   handleLike={handleLike}
                 />
@@ -176,12 +167,7 @@ const App = () => {
             />
             <Route
               path="/create"
-              element={
-                <NewBlog
-                  handleNotif={handleNotif}
-                  handleNewBlog={handleNewBlog}
-                />
-              }
+              element={<NewBlog handleNewBlog={handleNewBlog} />}
             />
             <Route
               path="*"

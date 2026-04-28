@@ -15,7 +15,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import LinkIcon from "@mui/icons-material/Link";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-const Blog = ({ blog, user, handleNotif, handleDelete, handleLike }) => {
+const Blog = ({ blog, user, handleDelete, handleLike }) => {
   const navigate = useNavigate();
 
   if (!blog) {

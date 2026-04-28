@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 
-const NewBlog = ({ handleNotif, handleNewBlog }) => {
+const NewBlog = ({ handleNewBlog }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
