@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -7,29 +7,29 @@ import {
   Typography,
   Paper,
   Avatar,
-} from '@mui/material'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 const LoginForm = ({ handleLogin }) => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const navigate = useNavigate()
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const logIn = async (event) => {
-    event.preventDefault()
-    await handleLogin({ username, password })
-    setUsername('')
-    setPassword('')
-    navigate('/')
-  }
+    event.preventDefault();
+    await handleLogin({ username, password });
+    setUsername("");
+    setPassword("");
+    navigate("/");
+  };
 
   return (
     <Box
       sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '80vh',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "80vh",
         px: 2,
       }}
     >
@@ -37,56 +37,56 @@ const LoginForm = ({ handleLogin }) => {
         elevation={3}
         sx={{
           p: 4,
-          width: '100%',
+          width: "100%",
           maxWidth: 400,
           borderRadius: 2,
         }}
       >
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
             mb: 3,
           }}
         >
-          <Avatar sx={{ bgcolor: 'primary.main', mb: 1 }}>
+          <Avatar sx={{ bgcolor: "primary.main", mb: 1 }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component='h1' variant='h5'>
+          <Typography component="h1" variant="h5">
             Sign in
           </Typography>
         </Box>
 
-        <Box component='form' onSubmit={logIn} noValidate>
+        <Box component="form" onSubmit={logIn} noValidate>
           <TextField
-            margin='normal'
+            margin="normal"
             required
             fullWidth
-            id='username'
-            label='Username'
-            name='username'
-            autoComplete='username'
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
             autoFocus
             value={username}
             onChange={(event) => setUsername(event.target.value)}
           />
           <TextField
-            margin='normal'
+            margin="normal"
             required
             fullWidth
-            id='password'
-            name='password'
-            label='Password'
-            type='password'
-            autoComplete='current-password'
+            id="password"
+            name="password"
+            label="Password"
+            type="password"
+            autoComplete="current-password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
           <Button
-            type='submit'
+            type="submit"
             fullWidth
-            variant='contained'
+            variant="contained"
             sx={{ mt: 3, mb: 1 }}
           >
             Login
@@ -94,7 +94,7 @@ const LoginForm = ({ handleLogin }) => {
         </Box>
       </Paper>
     </Box>
-  )
-}
+  );
+};
 
-export default LoginForm
+export default LoginForm;

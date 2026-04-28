@@ -2,7 +2,8 @@
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "build": "npm run build --prefix client",
-    "start": "cross-env NODE_ENV=production npm start --prefix server"
+    "start": "cross-env NODE_ENV=production npm start --prefix server",
+    "format": "npx prettier --write ./server ./client"
   },
   "dependencies": {
     "cross-env": "^10.1.0",
