@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useBlogActions } from "../stores/blog-store";
-import { useNotificationActions } from "../stores/notification-store";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useBlogActions } from '../stores/blog-store'
+import { useNotificationActions } from '../stores/notification-store'
 import {
   Box,
   Button,
@@ -9,44 +9,44 @@ import {
   Typography,
   Paper,
   Avatar,
-} from "@mui/material";
-import PostAddIcon from "@mui/icons-material/PostAdd";
+} from '@mui/material'
+import PostAddIcon from '@mui/icons-material/PostAdd'
 
 const NewBlog = () => {
-  const navigate = useNavigate();
-  const { addBlog } = useBlogActions();
-  const { setNotification } = useNotificationActions();
+  const navigate = useNavigate()
+  const { addBlog } = useBlogActions()
+  const { setNotification } = useNotificationActions()
 
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   const handleNewBlog = async (event) => {
     try {
-      event.preventDefault();
+      event.preventDefault()
       await addBlog({
         title,
         author,
         url,
-      });
-      setNotification(`Created ${title}`);
-    } catch (error) {
-      setNotification("Error creating the blog");
-      return;
+      })
+      setNotification(`Created ${title}`)
+    } catch {
+      setNotification('Error creating the blog')
+      return
     }
-    setTitle("");
-    setAuthor("");
-    setUrl("");
-    navigate("/");
-  };
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+    navigate('/')
+  }
 
   return (
     <Box
       sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "80vh",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '80vh',
         px: 2,
       }}
     >
@@ -54,20 +54,20 @@ const NewBlog = () => {
         elevation={3}
         sx={{
           p: 4,
-          width: "100%",
+          width: '100%',
           maxWidth: 400,
           borderRadius: 2,
         }}
       >
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
             mb: 3,
           }}
         >
-          <Avatar sx={{ bgcolor: "primary.main", mb: 1 }}>
+          <Avatar sx={{ bgcolor: 'primary.main', mb: 1 }}>
             <PostAddIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -121,7 +121,7 @@ const NewBlog = () => {
         </Box>
       </Paper>
     </Box>
-  );
-};
+  )
+}
 
-export default NewBlog;
+export default NewBlog

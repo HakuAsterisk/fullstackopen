@@ -1,19 +1,19 @@
-import { create } from "zustand";
+import { create } from 'zustand'
 
-let timeout = null;
+let timeout = null
 
 export const useNotificationStore = create((set) => ({
   notification: null,
   actions: {
     setNotification: (message) => {
-      clearTimeout(timeout);
-      set({ notification: message });
+      clearTimeout(timeout)
+      set({ notification: message })
       timeout = setTimeout(() => {
-        set({ notification: null });
-      }, 5000);
+        set({ notification: null })
+      }, 5000)
     },
   },
-}));
+}))
 
 export const useNotificationActions = () =>
-  useNotificationStore((state) => state.actions);
+  useNotificationStore((state) => state.actions)

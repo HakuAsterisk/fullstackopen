@@ -1,42 +1,42 @@
-import { useEffect } from "react";
-import { Routes, Route, Link } from "react-router-dom";
-import { AppBar, Toolbar, Button, Container, Box } from "@mui/material";
-import { ErrorBoundary } from "react-error-boundary";
-import { useNotificationActions } from "./stores/notification-store";
-import { useBlogActions } from "./stores/blog-store";
-import { useUser, useUserActions } from "./stores/user-store";
+import { useEffect } from 'react'
+import { Routes, Route, Link } from 'react-router-dom'
+import { AppBar, Toolbar, Button, Container, Box } from '@mui/material'
+import { ErrorBoundary } from 'react-error-boundary'
+import { useNotificationActions } from './stores/notification-store'
+import { useBlogActions } from './stores/blog-store'
+import { useUser, useUserActions } from './stores/user-store'
 
-import LoginForm from "./components/login-form";
-import Notification from "./components/notification";
-import NewBlog from "./components/new-blog";
-import BlogList from "./components/blog-list";
-import Blog from "./components/blog";
+import LoginForm from './components/login-form'
+import Notification from './components/notification'
+import NewBlog from './components/new-blog'
+import BlogList from './components/blog-list'
+import Blog from './components/blog'
 
 const App = () => {
-  const user = useUser();
-  const { logout } = useUserActions();
-  const { setNotification } = useNotificationActions();
-  const { initialize } = useBlogActions();
+  const user = useUser()
+  const { logout } = useUserActions()
+  const { setNotification } = useNotificationActions()
+  const { initialize } = useBlogActions()
 
   useEffect(() => {
-    initialize();
-  }, [initialize]);
+    initialize()
+  }, [initialize])
 
   const handleLogout = () => {
-    logout();
-    setNotification("Logout succesful!");
-  };
+    logout()
+    setNotification('Logout succesful!')
+  }
 
   const navButtonSx = {
-    bgcolor: "primary.dark",
-    "&:hover": { bgcolor: "primary.800" },
-  };
+    bgcolor: 'primary.dark',
+    '&:hover': { bgcolor: 'primary.800' },
+  }
 
   return (
     <>
       <AppBar position="static" elevation={2}>
         <Toolbar>
-          <Box sx={{ flexGrow: 1, display: "flex", gap: 1 }}>
+          <Box sx={{ flexGrow: 1, display: 'flex', gap: 1 }}>
             <Button color="inherit" component={Link} to="/" sx={navButtonSx}>
               Blogs
             </Button>
@@ -93,7 +93,7 @@ const App = () => {
             <Route
               path="*"
               element={
-                <Box sx={{ mt: 5, textAlign: "center" }}>
+                <Box sx={{ mt: 5, textAlign: 'center' }}>
                   <h2>404 - Not Found</h2>
                   <p>The page you are looking for does not exist.</p>
                   <Button variant="contained" component={Link} to="/">
@@ -106,7 +106,7 @@ const App = () => {
         </ErrorBoundary>
       </Container>
     </>
-  );
-};
+  )
+}
 
-export default App;
+export default App

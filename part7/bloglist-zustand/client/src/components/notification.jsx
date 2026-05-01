@@ -1,25 +1,25 @@
-import { Alert, Box } from "@mui/material";
-import { useNotificationStore } from "../stores/notification-store";
+import { Alert, Box } from '@mui/material'
+import { useNotificationStore } from '../stores/notification-store'
 
 const Notification = () => {
-  const notification = useNotificationStore((state) => state.notification);
+  const notification = useNotificationStore((state) => state.notification)
 
   if (notification === null) {
-    return null;
+    return null
   }
 
   return (
-    <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+    <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
       <Alert
-        severity={"info"}
+        severity={'info'}
         variant="filled"
-        sx={{ width: "100%", maxWidth: 600 }}
+        sx={{ width: '100%', maxWidth: 600 }}
         className="notification"
       >
         {notification}
       </Alert>
     </Box>
-  );
-};
+  )
+}
 
-export default Notification;
+export default Notification

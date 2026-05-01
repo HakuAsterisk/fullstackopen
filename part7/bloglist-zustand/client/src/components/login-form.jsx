@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useLogin } from "../stores/user-store";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useLogin } from '../stores/user-store'
 import {
   Box,
   Button,
@@ -8,32 +8,32 @@ import {
   Typography,
   Paper,
   Avatar,
-} from "@mui/material";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+} from '@mui/material'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 
 const LoginForm = () => {
-  const navigate = useNavigate();
-  const login = useLogin();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate()
+  const login = useLogin()
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const logIn = async (event) => {
-    event.preventDefault();
-    const success = await login(username, password);
-    setUsername("");
-    setPassword("");
+    event.preventDefault()
+    const success = await login(username, password)
+    setUsername('')
+    setPassword('')
     if (success) {
-      navigate("/");
+      navigate('/')
     }
-  };
+  }
 
   return (
     <Box
       sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "80vh",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '80vh',
         px: 2,
       }}
     >
@@ -41,20 +41,20 @@ const LoginForm = () => {
         elevation={3}
         sx={{
           p: 4,
-          width: "100%",
+          width: '100%',
           maxWidth: 400,
           borderRadius: 2,
         }}
       >
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
             mb: 3,
           }}
         >
-          <Avatar sx={{ bgcolor: "primary.main", mb: 1 }}>
+          <Avatar sx={{ bgcolor: 'primary.main', mb: 1 }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -98,7 +98,7 @@ const LoginForm = () => {
         </Box>
       </Paper>
     </Box>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm
