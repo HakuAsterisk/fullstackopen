@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useBlogActions } from "../stores/blog-store";
+import { useNotificationActions } from "../stores/notification-store";
 import {
   Box,
   Button,
@@ -10,19 +12,28 @@ import {
 } from "@mui/material";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 
-const NewBlog = ({ handleNewBlog }) => {
+const NewBlog = () => {
+  const navigate = useNavigate();
+  const { addBlog } = useBlogActions();
+  const { setNotification } = useNotificationActions();
+
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
-  const navigate = useNavigate();
 
-  const addBlog = async (event) => {
-    event.preventDefault();
-    await handleNewBlog({
-      title,
-      author,
-      url,
-    });
+  const handleNewBlog = async (event) => {
+    try {
+      event.preventDefault();
+      await addBlog({
+        title,
+        author,
+        url,
+      });
+      setNotification(`Created ${title}`);
+    } catch (error) {
+      setNotification("Error creating the blog");
+      return;
+    }
     setTitle("");
     setAuthor("");
     setUrl("");
@@ -64,7 +75,7 @@ const NewBlog = ({ handleNewBlog }) => {
           </Typography>
         </Box>
 
-        <Box component="form" onSubmit={addBlog} noValidate>
+        <Box component="form" onSubmit={handleNewBlog} noValidate>
           <TextField
             margin="normal"
             required

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useMatch } from "react-router-dom";
 import {
   Box,
   Card,
@@ -6,17 +6,27 @@ import {
   Typography,
   Button,
   Stack,
-  Link as MuiLink,
+  Link,
   Divider,
 } from "@mui/material";
+import { useBlog, useBlogActions } from "../stores/blog-store";
+import { useNotificationActions } from "../stores/notification-store";
+import { useUser } from "../stores/user-store";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PersonIcon from "@mui/icons-material/Person";
 import LinkIcon from "@mui/icons-material/Link";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-const Blog = ({ blog, user, handleDelete, handleLike }) => {
+const Blog = () => {
+  const { updateBlog, deleteBlog } = useBlogActions();
+  const { setNotification } = useNotificationActions();
+  const user = useUser();
   const navigate = useNavigate();
+
+  const match = useMatch("/blogs/:id");
+  const blogId = match ? match.params.id : null;
+  const blog = useBlog(blogId);
 
   if (!blog) {
     return null;
@@ -24,20 +34,30 @@ const Blog = ({ blog, user, handleDelete, handleLike }) => {
 
   const canDelete = user && blog.user[0].id === user.id;
 
-  const likeBlog = () => {
-    handleLike({
-      id: blog.id,
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-      likes: blog.likes + 1,
-    });
+  const likeBlog = async () => {
+    try {
+      await updateBlog({
+        id: blog.id,
+        title: blog.title,
+        author: blog.author,
+        url: blog.url,
+        likes: blog.likes + 1,
+      });
+      setNotification(`You liked ${blog.title}`);
+    } catch (error) {
+      setNotification("Error liking the blog");
+    }
   };
 
-  const deleteBlog = async () => {
+  const handleDeleteBlog = async () => {
     if (window.confirm(`Delete ${blog.title} by ${blog.author}?`)) {
-      await handleDelete(blog.id);
-      navigate("/");
+      try {
+        await deleteBlog(blog.id);
+        setNotification(`Deleted ${blog.title}`);
+        navigate("/");
+      } catch (error) {
+        setNotification("Error deleting the blog");
+      }
     } else {
       return;
     }
@@ -79,14 +99,14 @@ const Blog = ({ blog, user, handleDelete, handleLike }) => {
 
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <LinkIcon color="action" />
-              <MuiLink
+              <Link
                 href={blog.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 underline="hover"
               >
                 {blog.url}
-              </MuiLink>
+              </Link>
             </Box>
 
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -118,7 +138,7 @@ const Blog = ({ blog, user, handleDelete, handleLike }) => {
                 variant="outlined"
                 color="error"
                 startIcon={<DeleteIcon />}
-                onClick={deleteBlog}
+                onClick={handleDeleteBlog}
               >
                 Delete
               </Button>

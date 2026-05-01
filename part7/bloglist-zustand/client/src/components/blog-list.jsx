@@ -7,9 +7,10 @@ import {
   Typography,
   Stack,
 } from "@mui/material";
-import ArticleIcon from "@mui/icons-material/Article";
+import { useBlogs } from "../stores/blog-store";
 
-const BlogList = ({ blogs }) => {
+const BlogList = () => {
+  const blogs = useBlogs();
   return (
     <Box sx={{ maxWidth: 700, mx: "auto", mt: 3, px: 2 }}>
       <Typography variant="h4" component="h2" sx={{ mb: 3 }}>

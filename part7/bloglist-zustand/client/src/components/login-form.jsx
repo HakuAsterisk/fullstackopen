@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLogin } from "../stores/user-store";
 import {
   Box,
   Button,
@@ -10,17 +11,20 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
-const LoginForm = ({ handleLogin }) => {
+const LoginForm = () => {
+  const navigate = useNavigate();
+  const login = useLogin();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
 
   const logIn = async (event) => {
     event.preventDefault();
-    await handleLogin({ username, password });
+    const success = await login(username, password);
     setUsername("");
     setPassword("");
-    navigate("/");
+    if (success) {
+      navigate("/");
+    }
   };
 
   return (
