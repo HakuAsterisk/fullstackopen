@@ -1,22 +1,24 @@
-import { Alert, Box } from "@mui/material";
+import { Alert, Box } from '@mui/material'
+import { useNotification } from '../hooks/useNotification'
 
-const Notification = ({ message, type }) => {
-  if (message === null) {
-    return null;
+const Notification = () => {
+  const { state } = useNotification()
+  if (state.message === null) {
+    return null
   }
 
   return (
-    <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+    <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
       <Alert
-        severity={type ? "success" : "error"}
+        severity={state.isSuccess ? 'success' : 'error'}
         variant="filled"
-        sx={{ width: "100%", maxWidth: 600 }}
+        sx={{ width: '100%', maxWidth: 600 }}
         className="notification"
       >
-        {message}
+        {state.message}
       </Alert>
     </Box>
-  );
-};
+  )
+}
 
-export default Notification;
+export default Notification

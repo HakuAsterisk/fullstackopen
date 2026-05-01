@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom'
 import {
   Box,
   Card,
@@ -6,12 +6,12 @@ import {
   CardContent,
   Typography,
   Stack,
-} from "@mui/material";
-import ArticleIcon from "@mui/icons-material/Article";
+} from '@mui/material'
+import ArticleIcon from '@mui/icons-material/Article'
 
 const BlogList = ({ blogs }) => {
   return (
-    <Box sx={{ maxWidth: 700, mx: "auto", mt: 3, px: 2 }}>
+    <Box sx={{ maxWidth: 700, mx: 'auto', mt: 3, px: 2 }}>
       <Typography variant="h4" component="h2" sx={{ mb: 3 }}>
         Blogs!
       </Typography>
@@ -22,9 +22,9 @@ const BlogList = ({ blogs }) => {
             elevation={2}
             sx={{
               borderRadius: 2,
-              transition: "transform 0.15s, box-shadow 0.15s",
-              "&:hover": {
-                transform: "translateY(-2px)",
+              transition: 'transform 0.15s, box-shadow 0.15s',
+              '&:hover': {
+                transform: 'translateY(-2px)',
                 boxShadow: 6,
               },
             }}
@@ -36,8 +36,8 @@ const BlogList = ({ blogs }) => {
             >
               <CardContent
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
+                  display: 'flex',
+                  alignItems: 'center',
                   gap: 2,
                 }}
               >
@@ -50,7 +50,7 @@ const BlogList = ({ blogs }) => {
         ))}
       </Stack>
     </Box>
-  );
-};
+  )
+}
 
-export default BlogList;
+export default BlogList

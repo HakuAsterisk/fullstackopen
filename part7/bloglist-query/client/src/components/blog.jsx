@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
 import {
   Box,
   Card,
@@ -8,21 +8,21 @@ import {
   Stack,
   Link as MuiLink,
   Divider,
-} from "@mui/material";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import DeleteIcon from "@mui/icons-material/Delete";
-import PersonIcon from "@mui/icons-material/Person";
-import LinkIcon from "@mui/icons-material/Link";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+} from '@mui/material'
+import ThumbUpIcon from '@mui/icons-material/ThumbUp'
+import DeleteIcon from '@mui/icons-material/Delete'
+import PersonIcon from '@mui/icons-material/Person'
+import LinkIcon from '@mui/icons-material/Link'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
-const Blog = ({ blog, user, handleNotif, handleDelete, handleLike }) => {
-  const navigate = useNavigate();
+const Blog = ({ blog, user, handleDelete, handleLike }) => {
+  const navigate = useNavigate()
 
   if (!blog) {
-    return null;
+    return null
   }
 
-  const canDelete = user && blog.user[0].id === user.id;
+  const canDelete = user && blog.user[0].id === user.id
 
   const likeBlog = () => {
     handleLike({
@@ -31,20 +31,20 @@ const Blog = ({ blog, user, handleNotif, handleDelete, handleLike }) => {
       author: blog.author,
       url: blog.url,
       likes: blog.likes + 1,
-    });
-  };
+    })
+  }
 
   const deleteBlog = async () => {
     if (window.confirm(`Delete ${blog.title} by ${blog.author}?`)) {
-      await handleDelete(blog.id);
-      navigate("/");
+      await handleDelete(blog.id)
+      navigate('/')
     } else {
-      return;
+      return
     }
-  };
+  }
 
   return (
-    <Box sx={{ maxWidth: 700, mx: "auto", mt: 3, px: 2 }}>
+    <Box sx={{ maxWidth: 700, mx: 'auto', mt: 3, px: 2 }}>
       <Card elevation={3} sx={{ borderRadius: 2 }}>
         <CardContent sx={{ p: 4 }}>
           <Typography variant="h4" component="h2" sx={{ mb: 1 }}>
@@ -57,7 +57,7 @@ const Blog = ({ blog, user, handleNotif, handleDelete, handleLike }) => {
           <Divider sx={{ mb: 3 }} />
 
           <Stack spacing={2}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Typography variant="h6" component="span">
                 {blog.likes}
               </Typography>
@@ -77,7 +77,7 @@ const Blog = ({ blog, user, handleNotif, handleDelete, handleLike }) => {
               )}
             </Box>
 
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <LinkIcon color="action" />
               <MuiLink
                 href={blog.url}
@@ -89,7 +89,7 @@ const Blog = ({ blog, user, handleNotif, handleDelete, handleLike }) => {
               </MuiLink>
             </Box>
 
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <PersonIcon color="action" />
               <Typography variant="body2" color="text.secondary">
                 Added by {blog.user[0].username}
@@ -101,15 +101,15 @@ const Blog = ({ blog, user, handleNotif, handleDelete, handleLike }) => {
 
           <Box
             sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
             }}
           >
             <Button
               variant="outlined"
               startIcon={<ArrowBackIcon />}
-              onClick={() => navigate("/")}
+              onClick={() => navigate('/')}
             >
               Back
             </Button>
@@ -127,7 +127,7 @@ const Blog = ({ blog, user, handleNotif, handleDelete, handleLike }) => {
         </CardContent>
       </Card>
     </Box>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog
