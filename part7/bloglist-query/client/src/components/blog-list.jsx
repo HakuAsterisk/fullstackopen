@@ -8,8 +8,17 @@ import {
   Stack,
 } from '@mui/material'
 import ArticleIcon from '@mui/icons-material/Article'
+import { useBlogs } from '../hooks/useBlogs'
 
-const BlogList = ({ blogs }) => {
+const BlogList = () => {
+  const { blogs, isPending, isError } = useBlogs()
+
+  if (isPending) {
+    return <div>Loading blogs...</div>
+  }
+  if (isError) {
+    return <h1>Service currently unavailable due to server error...</h1>
+  }
   return (
     <Box sx={{ maxWidth: 700, mx: 'auto', mt: 3, px: 2 }}>
       <Typography variant="h4" component="h2" sx={{ mb: 3 }}>

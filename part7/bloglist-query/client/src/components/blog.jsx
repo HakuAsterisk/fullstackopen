@@ -1,4 +1,7 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useMatch } from 'react-router-dom'
+import { useBlogs } from '../hooks/useBlogs'
+import { useNotification } from '../hooks/useNotification'
+import { useUser } from '../hooks/useUser'
 import {
   Box,
   Card,
@@ -15,8 +18,15 @@ import PersonIcon from '@mui/icons-material/Person'
 import LinkIcon from '@mui/icons-material/Link'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
-const Blog = ({ blog, user, handleDelete, handleLike }) => {
+const Blog = () => {
+  const { getBlog, updateBlog, deleteBlog } = useBlogs()
+  const { dispatch } = useNotification()
+  const { user } = useUser()
   const navigate = useNavigate()
+
+  const match = useMatch('/blogs/:id')
+  const blogId = match ? match.params.id : null
+  const blog = getBlog(blogId)
 
   if (!blog) {
     return null
@@ -24,20 +34,41 @@ const Blog = ({ blog, user, handleDelete, handleLike }) => {
 
   const canDelete = user && blog.user[0].id === user.id
 
-  const likeBlog = () => {
-    handleLike({
-      id: blog.id,
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-      likes: blog.likes + 1,
-    })
+  const handleLike = async () => {
+    try {
+      await updateBlog({
+        id: blog.id,
+        title: blog.title,
+        author: blog.author,
+        url: blog.url,
+        likes: blog.likes + 1,
+      })
+    } catch (error) {
+      dispatch({
+        type: 'set_notif',
+        message: `Error liking the blog (${error.response?.status}: ${error.response?.data?.error})`,
+        isSuccess: false,
+      })
+    }
   }
 
-  const deleteBlog = async () => {
+  const handleDelete = async () => {
     if (window.confirm(`Delete ${blog.title} by ${blog.author}?`)) {
-      await handleDelete(blog.id)
-      navigate('/')
+      try {
+        await deleteBlog(blog.id)
+        dispatch({
+          type: 'set_notif',
+          message: `Deleted ${blog.title}`,
+          isSuccess: true,
+        })
+        navigate('/')
+      } catch (error) {
+        dispatch({
+          type: 'set_notif',
+          message: `Error deleting the blog (${error.response?.status}: ${error.response?.data?.error})`,
+          isSuccess: false,
+        })
+      }
     } else {
       return
     }
@@ -70,7 +101,7 @@ const Blog = ({ blog, user, handleDelete, handleLike }) => {
                   variant="contained"
                   size="small"
                   startIcon={<ThumbUpIcon />}
-                  onClick={likeBlog}
+                  onClick={handleLike}
                 >
                   Like
                 </Button>
@@ -118,7 +149,7 @@ const Blog = ({ blog, user, handleDelete, handleLike }) => {
                 variant="outlined"
                 color="error"
                 startIcon={<DeleteIcon />}
-                onClick={deleteBlog}
+                onClick={handleDelete}
               >
                 Delete
               </Button>

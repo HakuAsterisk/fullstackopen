@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useUser } from '../hooks/useUser'
+import { useNotification } from '../hooks/useNotification'
 import {
   Box,
   Button,
@@ -10,17 +12,32 @@ import {
 } from '@mui/material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 
-const LoginForm = ({ handleLogin }) => {
+const LoginForm = () => {
+  const { login } = useUser()
+  const { dispatch } = useNotification()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
   const logIn = async (event) => {
-    event.preventDefault()
-    await handleLogin({ username, password })
+    try {
+      event.preventDefault()
+      await login({ username, password })
+      dispatch({
+        type: 'set_notif',
+        message: 'Login successful!',
+        isSuccess: true,
+      })
+      navigate('/')
+    } catch (error) {
+      dispatch({
+        type: 'set_notif',
+        message: error.message,
+        isSuccess: false,
+      })
+    }
     setUsername('')
     setPassword('')
-    navigate('/')
   }
 
   return (
