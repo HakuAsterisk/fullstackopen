@@ -2,15 +2,21 @@ import { useNavigate, useMatch } from 'react-router-dom'
 import { useBlogs } from '../hooks/useBlogs'
 import { useNotification } from '../hooks/useNotification'
 import { useUser } from '../hooks/useUser'
+import { useField } from '../hooks/useField'
 import {
   Box,
   Card,
   CardContent,
   Typography,
   Button,
+  IconButton,
   Stack,
   Link as MuiLink,
   Divider,
+  List,
+  ListItem,
+  ListItemText,
+  TextField,
 } from '@mui/material'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -19,9 +25,10 @@ import LinkIcon from '@mui/icons-material/Link'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 const Blog = () => {
-  const { getBlog, updateBlog, deleteBlog } = useBlogs()
+  const { getBlog, updateBlog, deleteBlog, leaveComment } = useBlogs()
   const { dispatch } = useNotification()
   const { user } = useUser()
+  const comment = useField('text', 'comment')
   const navigate = useNavigate()
 
   const match = useMatch('/blogs/:id')
@@ -50,6 +57,21 @@ const Blog = () => {
         isSuccess: false,
       })
     }
+  }
+
+  const handleComment = async (e) => {
+    e.preventDefault()
+    if (comment.inputProps.value.trim() === '') {
+      dispatch({
+        type: 'set_notif',
+        message: `Please enter a comment before submitting.`,
+        isSuccess: false,
+      })
+      comment.reset()
+      return
+    }
+    await leaveComment({ id: blog.id, comment: comment.inputProps.value })
+    comment.reset()
   }
 
   const handleDelete = async () => {
@@ -129,6 +151,54 @@ const Blog = () => {
           </Stack>
 
           <Divider sx={{ my: 3 }} />
+          <Box>
+            <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+              Comments:
+            </Typography>
+            <List
+              sx={{
+                maxHeight: 250,
+                overflow: 'auto',
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 1,
+                py: 0,
+              }}
+            >
+              {blog.comments.length > 0 ? (
+                blog.comments.map((comment, index) => (
+                  <ListItem
+                    key={index}
+                    divider={index < blog.comments.length - 1}
+                  >
+                    <ListItemText primary={comment} />
+                  </ListItem>
+                ))
+              ) : (
+                <ListItem>
+                  <ListItemText primary="No comments yet." />
+                </ListItem>
+              )}
+            </List>
+            {user && (
+              <Box
+                component="form"
+                onSubmit={handleComment}
+                sx={{ display: 'flex', gap: 1, mt: 2 }}
+              >
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Leave a comment"
+                  {...comment.inputProps}
+                />
+                <Button type="submit" variant="contained" size="small">
+                  Send
+                </Button>
+              </Box>
+            )}
+          </Box>
+          <Divider sx={{ my: 3 }} />
 
           <Box
             sx={{
@@ -137,22 +207,21 @@ const Blog = () => {
               alignItems: 'center',
             }}
           >
-            <Button
-              variant="outlined"
-              startIcon={<ArrowBackIcon />}
+            <IconButton
+              color="primary"
+              sx={{ border: '1px solid', borderRadius: 1 }}
               onClick={() => navigate('/')}
             >
-              Back
-            </Button>
+              <ArrowBackIcon />
+            </IconButton>
             {canDelete && (
-              <Button
-                variant="outlined"
+              <IconButton
                 color="error"
-                startIcon={<DeleteIcon />}
+                sx={{ border: '1px solid', borderRadius: 1 }}
                 onClick={handleDelete}
               >
-                Delete
-              </Button>
+                <DeleteIcon />
+              </IconButton>
             )}
           </Box>
         </CardContent>

@@ -1,5 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getAll, createBlog, updateBlog, deleteBlog } from '../services/blogs'
+import {
+  getAll,
+  createBlog,
+  updateBlog,
+  deleteBlog,
+  comment,
+} from '../services/blogs'
 
 const selectSortedBlogs = (data) => [...data].sort((a, b) => b.likes - a.likes)
 
@@ -47,6 +53,13 @@ export const useBlogs = () => {
     },
   })
 
+  const leaveComment = useMutation({
+    mutationFn: comment,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['blogs'])
+    },
+  })
+
   return {
     blogs: blogs.data,
     isPending: blogs.isPending,
@@ -56,5 +69,6 @@ export const useBlogs = () => {
     addBlog: (newBlog) => newBlogMutation.mutateAsync(newBlog),
     updateBlog: (blog) => updateBlogMutation.mutateAsync(blog),
     deleteBlog: (id) => deleteBlogMutation.mutateAsync(id),
+    leaveComment: (content) => leaveComment.mutateAsync(content),
   }
 }
