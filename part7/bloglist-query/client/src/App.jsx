@@ -2,6 +2,7 @@ import { Routes, Route, Link } from 'react-router-dom'
 import { AppBar, Toolbar, Button, Container, Box } from '@mui/material'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useUser } from './hooks/useUser'
+import { useNotification } from './hooks/useNotification'
 
 import LoginForm from './components/login-form'
 import Notification from './components/notification'
@@ -11,6 +12,17 @@ import Blog from './components/blog'
 
 const App = () => {
   const { user, logout } = useUser()
+  const { dispatch } = useNotification()
+
+  const handleLogout = () => {
+    logout()
+    dispatch({
+      type: 'set_notif',
+      message: 'Logout successful!',
+      isSuccess: true,
+    })
+  }
+
   const navButtonSx = {
     bgcolor: 'primary.dark',
     '&:hover': { bgcolor: 'primary.800' },
@@ -45,7 +57,7 @@ const App = () => {
               Login
             </Button>
           ) : (
-            <Button color="inherit" onClick={logout} sx={navButtonSx}>
+            <Button color="inherit" onClick={handleLogout} sx={navButtonSx}>
               Logout
             </Button>
           )}

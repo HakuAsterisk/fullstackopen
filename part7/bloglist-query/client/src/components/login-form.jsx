@@ -1,7 +1,7 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../hooks/useUser'
 import { useNotification } from '../hooks/useNotification'
+import { useField } from '../hooks/useField'
 import {
   Box,
   Button,
@@ -15,14 +15,18 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 const LoginForm = () => {
   const { login } = useUser()
   const { dispatch } = useNotification()
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const navigate = useNavigate()
+
+  const username = useField('text', 'username')
+  const password = useField('password', 'password')
 
   const logIn = async (event) => {
     try {
       event.preventDefault()
-      await login({ username, password })
+      await login({
+        username: username.inputProps.value,
+        password: password.inputProps.value,
+      })
       dispatch({
         type: 'set_notif',
         message: 'Login successful!',
@@ -36,8 +40,8 @@ const LoginForm = () => {
         isSuccess: false,
       })
     }
-    setUsername('')
-    setPassword('')
+    username.reset()
+    password.reset()
   }
 
   return (
@@ -82,23 +86,17 @@ const LoginForm = () => {
             fullWidth
             id="username"
             label="Username"
-            name="username"
             autoComplete="username"
             autoFocus
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
+            {...username.inputProps}
           />
           <TextField
             margin="normal"
             required
             fullWidth
             id="password"
-            name="password"
             label="Password"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            {...password.inputProps}
           />
           <Button
             type="submit"

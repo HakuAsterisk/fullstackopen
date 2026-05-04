@@ -1,29 +1,26 @@
 import { createContext, useState, useEffect } from 'react'
-import { useNotification } from '../../hooks/useNotification'
-import loginService from '../../services/login'
 import blogService from '../../services/blogs'
+import userService from '../../services/persistentUser'
 
 const UserContext = createContext()
 
 export default UserContext
 
 export const UserContextProvider = (props) => {
-  const { dispatch } = useNotification()
   const [user, setUser] = useState(null)
+  const { getUser, saveUser, removeUser } = userService
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('appUser')
-    if (loggedUserJSON) {
-      const savedUser = JSON.parse(loggedUserJSON)
+    const savedUser = getUser()
+    if (savedUser) {
       setUser(savedUser)
       blogService.setToken(savedUser.token)
     }
-  }, [])
+  }, [getUser])
 
   const login = async (loginData) => {
     try {
-      const user = await loginService.login({ ...loginData })
-      window.localStorage.setItem('appUser', JSON.stringify(user))
+      const user = await saveUser(loginData)
       blogService.setToken(user.token)
       setUser(user)
     } catch {
@@ -32,14 +29,9 @@ export const UserContextProvider = (props) => {
   }
 
   const logout = () => {
-    window.localStorage.removeItem('appUser')
+    removeUser()
     blogService.setToken(null)
     setUser(null)
-    dispatch({
-      type: 'set_notif',
-      message: 'Logout successful!',
-      isSuccess: true,
-    })
   }
 
   return (

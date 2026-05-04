@@ -1,7 +1,7 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useBlogs } from '../hooks/useBlogs'
 import { useNotification } from '../hooks/useNotification'
+import { useField } from '../hooks/useField'
 import {
   Box,
   Button,
@@ -15,23 +15,28 @@ import PostAddIcon from '@mui/icons-material/PostAdd'
 const NewBlog = () => {
   const { addBlog } = useBlogs()
   const { dispatch } = useNotification()
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const navigate = useNavigate()
+
+  const title = useField('text', 'title')
+  const author = useField('text', 'author')
+  const url = useField('text', 'url')
 
   const handleNewBlog = async (event) => {
     event.preventDefault()
     try {
-      await addBlog({ title, author, url })
+      await addBlog({
+        title: title.inputProps.value,
+        author: author.inputProps.value,
+        url: url.inputProps.value,
+      })
       dispatch({
         type: 'set_notif',
         message: `Created ${title}`,
         isSuccess: true,
       })
-      setTitle('')
-      setAuthor('')
-      setUrl('')
+      title.reset()
+      author.reset()
+      url.reset()
       navigate('/')
     } catch (error) {
       dispatch({
@@ -84,11 +89,9 @@ const NewBlog = () => {
             fullWidth
             id="title"
             label="Title"
-            name="title"
             placeholder="Blog title"
             autoFocus
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
+            {...title.inputProps}
           />
           <TextField
             margin="normal"
@@ -96,10 +99,8 @@ const NewBlog = () => {
             fullWidth
             id="author"
             label="Author"
-            name="author"
             placeholder="Blog author"
-            value={author}
-            onChange={(event) => setAuthor(event.target.value)}
+            {...author.inputProps}
           />
           <TextField
             margin="normal"
@@ -107,10 +108,8 @@ const NewBlog = () => {
             fullWidth
             id="url"
             label="Url"
-            name="url"
             placeholder="Blog url"
-            value={url}
-            onChange={(event) => setUrl(event.target.value)}
+            {...url.inputProps}
           />
           <Button
             type="submit"
