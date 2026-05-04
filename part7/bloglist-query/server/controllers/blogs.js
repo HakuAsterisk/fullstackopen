@@ -1,5 +1,6 @@
 const blogsRouter = require("express").Router();
 const Blog = require("../models/blog");
+const User = require("../models/user");
 const { identifyUser } = require("../utils/middleware");
 
 blogsRouter.get("/", async (req, res) => {
@@ -41,14 +42,15 @@ blogsRouter.delete("/:id", identifyUser, async (req, res) => {
   if (!targetBlog) {
     return res.status(404).json({ error: "Blog not found" });
   }
-
   if (targetBlog.user.toString() !== user._id.toString()) {
     return res
       .status(401)
       .json({ error: "You may only delete your own blogs" });
   }
-
   await Blog.findByIdAndDelete(req.params.id);
+  await User.findByIdAndUpdate(user._id, {
+    $pull: { blogs: targetBlog._id },
+  });
   res.status(204).end();
 });
 

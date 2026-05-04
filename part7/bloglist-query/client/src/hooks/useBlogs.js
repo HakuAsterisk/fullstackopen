@@ -19,6 +19,13 @@ export const useBlogs = () => {
     return blogsData ? blogsData.find((blog) => blog.id === id) : null
   }
 
+  const blogsByUserId = (userId) => {
+    const blogsData = queryClient.getQueryData(['blogs'])
+    return blogsData
+      ? blogsData.filter((blog) => blog.user[0].id === userId)
+      : []
+  }
+
   const newBlogMutation = useMutation({
     mutationFn: createBlog,
     onSuccess: () => {
@@ -41,10 +48,11 @@ export const useBlogs = () => {
   })
 
   return {
-    blogs: blogs.data ?? [],
+    blogs: blogs.data,
     isPending: blogs.isPending,
     isError: blogs.isError,
     getBlog: (id) => blogById(id),
+    getBlogsByUser: (userId) => blogsByUserId(userId),
     addBlog: (newBlog) => newBlogMutation.mutateAsync(newBlog),
     updateBlog: (blog) => updateBlogMutation.mutateAsync(blog),
     deleteBlog: (id) => deleteBlogMutation.mutateAsync(id),

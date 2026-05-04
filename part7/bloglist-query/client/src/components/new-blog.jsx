@@ -31,7 +31,7 @@ const NewBlog = () => {
       })
       dispatch({
         type: 'set_notif',
-        message: `Created ${title}`,
+        message: `Created ${title.inputProps.value}`,
         isSuccess: true,
       })
       title.reset()

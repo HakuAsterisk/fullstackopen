@@ -7,7 +7,6 @@ import {
   Typography,
   Stack,
 } from '@mui/material'
-import ArticleIcon from '@mui/icons-material/Article'
 import { useBlogs } from '../hooks/useBlogs'
 
 const BlogList = () => {
@@ -21,9 +20,6 @@ const BlogList = () => {
   }
   return (
     <Box sx={{ maxWidth: 700, mx: 'auto', mt: 3, px: 2 }}>
-      <Typography variant="h4" component="h2" sx={{ mb: 3 }}>
-        Blogs!
-      </Typography>
       <Stack spacing={2}>
         {blogs.map((blog) => (
           <Card
